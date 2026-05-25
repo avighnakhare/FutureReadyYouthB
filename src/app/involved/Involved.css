@@ -1,0 +1,243 @@
+/* Get Involved Page CSS Styling */
+
+.involved-badge {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.35rem 1rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 1rem;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.involved-hero-section {
+  padding: 5rem 0 3rem;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.involved-options-section {
+  padding: 2rem 0 6rem;
+}
+
+.involved-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+.involved-option-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  padding: 3rem 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.involved-option-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.option-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.option-icon-badge.blue { background: var(--color-primary-light); color: var(--color-primary); }
+.option-icon-badge.green { background: var(--color-secondary-light); color: var(--color-secondary); }
+.option-icon-badge.orange { background: var(--color-accent-light); color: var(--color-accent); }
+.option-icon-badge.purple { background: #F5F3FF; color: #8B5CF6; }
+.option-icon-badge.yellow { background: #FEF3C7; color: #D97706; }
+
+.involved-option-card h3 {
+  font-size: 1.4rem;
+}
+
+.involved-option-card p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+/* Featured Card Highlight */
+.highlighted-card {
+  border-color: var(--color-accent);
+  background: radial-gradient(circle at 10% 20%, rgba(234, 88, 12, 0.08) 0%, var(--color-card) 95%);
+  box-shadow: var(--shadow-md);
+}
+
+.highlighted-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--color-accent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-featured-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+}
+
+/* Footer Help Banner */
+.involved-footer-banner {
+  padding: 5rem 0;
+  background: transparent;
+}
+
+.banner-box {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: var(--color-white);
+  padding: 5rem 4rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+}
+
+.banner-box h2 {
+  font-size: 2.5rem;
+  color: var(--color-white);
+  margin-bottom: 1rem;
+}
+
+.banner-box p {
+  font-size: 1.15rem;
+  color: var(--color-primary-light);
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+/* Donation Modal specific overrides */
+.donation-modal-card {
+  max-width: 480px;
+  padding: 3rem 2.5rem;
+}
+
+.donation-amount-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.amt-btn {
+  background: var(--color-surface-hover);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.amt-btn:hover {
+  background: var(--color-border);
+}
+
+.amt-btn.selected {
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.custom-amount-group {
+  margin-top: 1rem;
+}
+
+.custom-input-wrapper,
+.card-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dollar-icon,
+.card-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--color-text-light);
+}
+
+.custom-input-wrapper input,
+.card-input-wrapper input {
+  padding-left: 2.25rem !important;
+  width: 100%;
+}
+
+/* Success Receipt Panel */
+.donation-success-panel {
+  padding: 1.5rem 0;
+}
+
+.success-check-mark {
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+  animation: pulseSoft 2.5s infinite;
+}
+
+.donation-success-panel h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.receipt-box {
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.receipt-box strong {
+  color: var(--color-text);
+}
+
+.success-note {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .banner-box {
+    padding: 3.5rem 1.5rem;
+  }
+  .banner-box h2 {
+    font-size: 2rem;
+  }
+  .donation-modal-card {
+    padding: 2rem 1.5rem;
+  }
+}

@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id @default(cuid())
+  username            String   @unique
+  passwordHash        String
+  mustChangePassword  Boolean  @default(true)
+  createdAt           DateTime @default(now())
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model SystemMetric {
+  id                   String   @id @default("metrics")
+  studentsReached      Int      @default(0)
+  volunteersEngaged    Int      @default(0)
+  serviceHours         Int      @default(0)
+  communityProjects    Int      @default(0)
+  eventsHosted         Int      @default(0)
+  mentors              Int      @default(0)
+  donationsReceived    Float    @default(0.0)
+  resourcesDistributed Int      @default(0)
+  partnerships         Int      @default(0)
+}
+
+model Content {
+  key   String @id
+  value String
+}
+
+model Program {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String
+  iconName    String
+  description String
+  objectives  String   // Newline-separated text
+  benefits    String   // Newline-separated text
+  futureGoals String
+  themeClass  String
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String
+  createdAt DateTime @default(now())
+}
+
+model Event {
+  id           String              @id @default(cuid())
+  title        String
+  category     String
+  date         String
+  time         String
+  location     String
+  description  String
+  host         String
+  capacity     Int
+  spotsLeft    Int
+  createdAt    DateTime            @default(now())
+  registration EventRegistration[]
+}
+
+model EventRegistration {
+  id        String   @id @default(cuid())
+  eventId   String
+  fullName  String
+  email     String
+  createdAt DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  type        String
+  size        String
+  filename    String
+  description String
+  content     String
+  createdAt   DateTime @default(now())
+}
+
+model Volunteer {
+  id                  String   @id @default(cuid())
+  firstName           String
+  lastName            String
+  email               String
+  phoneNumber         String
+  dateOfBirth         String
+  city                String
+  state               String
+  schoolOrOrg         String?
+  gradeLevel          String?
+  occupation          String?
+  reasonToVolunteer   String
+  skillsToContribute  String
+  volunteerExperience String?
+  availability        String
+  hoursMonthly        String
+  preferredRole       String
+  additionalComments  String?
+  consent             Boolean
+  status              String   @default("New") // New, Under Review, Interview Scheduled, Accepted, Declined
+  createdAt           DateTime @default(now())
+}
