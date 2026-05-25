@@ -2,20 +2,13 @@
 
 import { useState } from "react";
 import type { Volunteer } from "@prisma/client";
-import { Search, Download, Mail, ChevronDown, ChevronUp, User, Globe, FileText, CheckCircle2, Clock } from "lucide-react";
+import { Search, Download, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function VolunteerTable({ data }: { data: Volunteer[] }) {
   const [volunteersList, setVolunteersList] = useState<Volunteer[]>(data);
   const [filterText, setFilterText] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
-  // Direct email wizard state
-  const [emailModalCandidate, setEmailModalCandidate] = useState<Volunteer | null>(null);
-  const [emailSubject, setEmailSubject] = useState("");
-  const [emailMessage, setEmailMessage] = useState("");
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const [emailSentPreview, setEmailSentPreview] = useState<string | null>(null);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -35,41 +28,6 @@ export default function VolunteerTable({ data }: { data: Volunteer[] }) {
     } catch {
       alert("Network error updating status.");
     }
-  };
-
-  const handleOpenEmailModal = (e: React.MouseEvent, candidate: Volunteer) => {
-    e.stopPropagation();
-    setEmailSubject("Update regarding your application");
-    setEmailMessage(`Thank you for applying to volunteer with Future Ready Youth! We are excited to schedule an interview with you.`);
-    setEmailSentPreview(null);
-    setEmailModalCandidate(candidate);
-  };
-
-  const handleSendEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!emailSubject.trim() || !emailMessage.trim()) return;
-
-    setIsSendingEmail(true);
-    try {
-      const res = await fetch("/api/admin/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: emailModalCandidate!.id,
-          subject: emailSubject,
-          message: emailMessage
-        })
-      });
-      const resData = await res.json();
-      if (resData.success) {
-        setEmailSentPreview(resData.previewUrl || "sent-real-gmail");
-      } else {
-        alert("Failed to send correspondence.");
-      }
-    } catch {
-      alert("Network error sending correspondence.");
-    }
-    setIsSendingEmail(false);
   };
 
   const toggleRow = (id: string) => {
@@ -182,7 +140,6 @@ export default function VolunteerTable({ data }: { data: Volunteer[] }) {
               <th>Role Preference</th>
               <th>Timing & Hours</th>
               <th>Applied Status</th>
-              <th style={{ textAlign: "center" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -232,21 +189,12 @@ export default function VolunteerTable({ data }: { data: Volunteer[] }) {
                         </select>
                       </div>
                     </td>
-                    <td style={{ textAlign: "center" }} onClick={e => e.stopPropagation()}>
-                      <button 
-                        onClick={(e) => handleOpenEmailModal(e, v)} 
-                        className="btn btn-outline btn-small"
-                        title="Direct correspondence email"
-                      >
-                        <Mail size={14} /> Email
-                      </button>
-                    </td>
                   </tr>
 
                   {/* Expandable Details Drawer */}
                   {isExpanded && (
                     <tr className="detail-row-expanded">
-                      <td colSpan={6}>
+                      <td colSpan={5}>
                         <div className="details-drawer-content animate-fade-in">
                           <div className="drawer-grid">
                             
@@ -292,7 +240,7 @@ export default function VolunteerTable({ data }: { data: Volunteer[] }) {
               );
             }) : (
               <tr>
-                <td colSpan={6} style={{ textAlign: "center", padding: "4rem" }} className="empty-table-cell">
+                <td colSpan={5} style={{ textAlign: "center", padding: "4rem" }} className="empty-table-cell">
                   No applicants found matching this search or status selection.
                 </td>
               </tr>
@@ -300,73 +248,6 @@ export default function VolunteerTable({ data }: { data: Volunteer[] }) {
           </tbody>
         </table>
       </div>
-
-      {/* DUST DIRECT correspondence EMAIL MODAL */}
-      {emailModalCandidate && (
-        <div className="modal-overlay" onClick={() => setEmailModalCandidate(null)}>
-          <div className="modal-card register-modal animate-fade-in" onClick={e => e.stopPropagation()} style={{maxWidth: '520px'}}>
-            <button className="modal-close-btn" onClick={() => setEmailModalCandidate(null)}>
-              <span style={{fontSize: '20px'}}>&times;</span>
-            </button>
-
-            <div className="modal-header">
-              <h2>Direct Candidate Correspondence</h2>
-              <p className="subtitle" style={{margin: 0, textAlign: 'left', fontSize: '0.85rem'}}>
-                To candidate: <strong>{emailModalCandidate.firstName} {emailModalCandidate.lastName}</strong> ({emailModalCandidate.email})
-              </p>
-            </div>
-
-            <div className="modal-body">
-              {emailSentPreview ? (
-                <div className="reg-success-screen text-center animate-fade-in">
-                  <div className="success-icon-badge">📬</div>
-                  <h3>Correspondence Dispatched!</h3>
-                  <p>Your message was sent through the SMTP test servers.</p>
-                  
-                  {emailSentPreview !== "sent-real-gmail" && (
-                    <div className="demo-preview-alert" style={{textAlign: 'left', marginTop: '1rem'}}>
-                      <p style={{fontSize: '0.75rem'}}><strong>Local SMTP Log Link:</strong> View your sent direct correspondence below:</p>
-                      <a href={emailSentPreview} target="_blank" rel="noreferrer" className="demo-preview-link" style={{fontSize: '0.75rem'}}>
-                        {emailSentPreview}
-                      </a>
-                    </div>
-                  )}
-
-                  <button onClick={() => setEmailModalCandidate(null)} className="btn btn-primary" style={{marginTop: '1rem'}}>
-                    Close Window
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSendEmailSubmit} className="register-event-form" style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-                  <div className="form-group">
-                    <label htmlFor="emailSub">Subject *</label>
-                    <input 
-                      type="text" 
-                      id="emailSub" 
-                      value={emailSubject}
-                      onChange={e => setEmailSubject(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="emailMsg">Message details *</label>
-                    <textarea 
-                      id="emailMsg" 
-                      rows={5}
-                      value={emailMessage}
-                      onChange={e => setEmailMessage(e.target.value)}
-                      required
-                    ></textarea>
-                  </div>
-                  <button type="submit" className="btn btn-accent btn-large" disabled={isSendingEmail} style={{width: '100%'}}>
-                    {isSendingEmail ? "Dispatching Correspondence..." : "Send Custom Email"}
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );
